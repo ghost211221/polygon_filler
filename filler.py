@@ -267,9 +267,14 @@ class Line():
         """segment must be horizontal"""
         def _process(val):
             a = abs(val // STEP)
-            border = -1 * a * STEP if val < 0 else (a + 1) * STEP
+            b = abs(val) % STEP
+            if val < 0:
+                return -1 * a * STEP
 
-            return border
+            if b == 0:
+                return a * STEP
+
+            return (a + 1) * STEP
 
         if not self.is_horizontal:
             raise Exception('segment is not horizontal')
@@ -469,6 +474,12 @@ if __name__ == '__main__':
         line = Line(Point(Decimal('-3.99996'), Decimal('0')), Point(Decimal('4'), Decimal('0')))
         point = line.first_segment_point_on_grid
         assert point and point.x == Decimal('-3.99996')
+        line = Line(Point(Decimal('3'), Decimal('0')), Point(Decimal('4'), Decimal('0')))
+        point = line.first_segment_point_on_grid
+        assert point and point.x == Decimal('3')
+        line = Line(Point(Decimal('3.0001'), Decimal('0')), Point(Decimal('4'), Decimal('0')))
+        point = line.first_segment_point_on_grid
+        assert point and point.x == Decimal('3.00012')
 
 
         lines = [
